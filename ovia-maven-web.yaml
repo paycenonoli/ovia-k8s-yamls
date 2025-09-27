@@ -1,0 +1,35 @@
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: ovia
+
+---
+apiVersion: v1
+kind: Pod
+metadata:
+  name: ovia-app
+  labels:
+    app: ovia-webapp
+  namespace: ovia 
+
+spec:
+  containers:
+  - name: ovia-web-container
+    image: ojpascale/ovia-maven-web:v1
+    ports:
+    - containerPort: 8080
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: ovia-svc
+  namespace: ovia
+spec:
+  type: NodePort
+  selector:
+    app: ovia-webapp
+  ports:
+  - port: 80
+    targetPort: 8080
+    nodePort: 30000

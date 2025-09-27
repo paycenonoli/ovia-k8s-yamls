@@ -1,0 +1,24 @@
+apiVersion: apps/v1
+kind: DaemonSet
+metadata:
+  name: ovia-daemon
+  namespace: ovia-ns
+  labels: 
+    app: ovia-fluentd
+spec:
+  selector:
+    matchLabels:
+      app: ovia-fluentd
+  template:
+    metadata:
+      labels: 
+        app: ovia-fluentd
+    spec:
+      tolerations:
+      - key: "node-role.kubernetes.io/control-plane"
+        operator: "Exists"
+        effect: "NoSchedule"
+      containers:
+      - name: fluentd
+        image: fluent/fluentd:latest
+        

@@ -1,0 +1,43 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: hpa-deployment
+  namespace: default
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: hpa-pod
+  template:
+    metadata:
+      labels:
+        app: hpa-pod
+    spec:
+      containers:
+      - name: hpa-contianer
+        image: k8s.gcr.io/hpa-example
+        ports:
+        - name: http
+          containerPort: 80
+        resources:
+          requests:
+            cpu: 100m
+            memory: 100Mi
+          limits:
+            cpu: 250m
+            memory: 500Mi
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: load-svc
+spec:
+  type: NodePort
+  selector:
+    app: hpa-pod
+  ports:
+  - port: 80
+    targetPort: 80
+    
